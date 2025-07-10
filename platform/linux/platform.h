@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <signal.h>
 
 /*
  * Memory
@@ -46,5 +47,18 @@ mutex_unlock(mutex_t *mutex)
 {
     return pthread_mutex_unlock(mutex);
 }
+
+/* Interrup */
+
+// On Linux, applications can use `[SIGTMIN, SIGTMAX]` but we do not use SIGMIN since glibc uses it.
+#define INTR_IRQ_BASE   (SIGRTMIN + 1)
+#define INTR_IRQ_SHARED 0x0001
+
+int intr_ruquest_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev);
+int intr_raise_irq(unsigned int irq);
+
+int intr_run(void);
+void intr_shutdown(void);
+int intr_init(void);
 
 #endif
