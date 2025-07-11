@@ -3,12 +3,13 @@
 #include "platform.h"
 
 #define DUMMY_IRQ INTR_IRQ_BASE
+#define DUMMY_MTU UINT16_MAX
 
 static int dummy_transmit(struct net_device *dev, uint16_t type, const uint8_t *data, size_t len, const void *dst) {
     debugf("dev=%s, type=0x%04x, len=%zu", dev->name, type, len);
     debugdump(data, len);
 
-    // Notify the protocol stack that the transmission has been completed.
+    // Notify the kernel that the transmission has been completed.
     intr_raise_irq(DUMMY_IRQ);
     return 0;
 }
