@@ -53,6 +53,7 @@ mutex_unlock(mutex_t *mutex)
 // On Linux, applications can use `[SIGTMIN, SIGTMAX]` but we do not use SIGMIN since glibc uses it.
 #define INTR_IRQ_BASE   (SIGRTMIN + 1)
 #define INTR_IRQ_SHARED 0x0001
+#define INTR_IRQ_SOFTIRQ SIGUSR1
 
 int intr_ruquest_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev);
 int intr_raise_irq(unsigned int irq);
