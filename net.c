@@ -1,6 +1,53 @@
+#include <string.h>
+
 #include "platform.h"
 #include "util.h"
 #include "net.h"
+#include "ip.h"
+
+struct net_protocol {
+    struct net_protocol *next;
+    uint16_t type;
+    // TODO: protect this with mutex.
+    struct queue_head queue;
+    void (*handler)(const uint8_t *data, size_t len, struct net_device *dev);
+};
+
+// Global list of protocols.
+static struct net_protocol *protocols;
+
+// SAFETY: must be called before `net_run`.
+int net_protocol_register(uint16_t type, void (*handler)(const uint8_t *data, size_t len, struct net_device *dev)) {
+    struct net_protocol *proto;
+
+    for (proto = protocols; proto; proto = proto->next) {
+        if (type == proto->type) {
+            errorf("already registered, type = 0x%04x", type);
+            return -1;
+        }
+    }
+    
+    proto = memory_alloc(sizeof(*proto));
+    if (!proto) {
+        errorf("memory_alloc() failure");
+        return -1;
+    }
+
+    proto->type = type;
+    proto->handler = handler;
+    queue_init(&proto->queue);
+
+    proto->next = protocols;
+    protocols = proto;
+    infof("registered, type = 0x%04x", type);
+    return 0;
+}
+
+struct  net_protocol_queue_entry {
+    struct net_device *dev;
+    size_t len;
+    uint8_t data[];
+};
 
 // Global list of netrok devices.
 static struct net_device *devices = NULL;
@@ -87,8 +134,27 @@ int net_device_output(struct net_device *dev, uint16_t type, const uint8_t *data
 
 // Inputs from the network device. Used by device drivers.
 int net_input_handler(uint16_t type, const uint8_t *data, size_t len, struct net_device *dev) {
-    debugf("dev=%s, type=0x%04x, len=%zu", dev->name, type, len);
-    debugdump(data, len);
+    struct net_protocol *proto;
+    struct net_protocol_queue_entry *entry;
+
+    for (proto = protocols; proto; proto = proto->next) {
+        if (proto->type == type) {
+            entry = memory_alloc(sizeof(*entry) + len);
+            if (!entry) {
+                errorf("memory_alloc() failure");
+                return -1;
+            }
+            entry->len = len;
+            entry->dev = dev;
+            memcpy(entry->data, data, len);
+            queue_push(&proto->queue, entry);
+            debugf("queue pushed (num:%u), dev=%s, type=0x%04x, len=%zu", proto->queue.num, dev->name, type, len);
+            debugdump(data, len);
+            return 0;
+        }
+    }
+    
+    // Ignores unsupported protocols.
     return 0;
 }
 
@@ -125,6 +191,10 @@ void net_shutdown(void) {
 int net_init(void) {
     if (intr_init() == -1) {
         errorf("intr_init() failure");
+        return -1;
+    }
+    if (ip_init() == -1) {
+        errorf("ip_init() failure");
         return -1;
     }
     infof("initialized");
