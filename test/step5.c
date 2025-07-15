@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     signal(SIGINT, on_signal);
     if (net_init() == -1) {
-        errorf("dummy_init() failure");
+        errorf("net_init() failure");
         return -1;
     }
     dev = loopback_init();

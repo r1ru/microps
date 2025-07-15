@@ -77,6 +77,38 @@ int net_device_register(struct net_device *dev) {
     return 0;
 }
 
+
+// Registers the logical interface to the network device.
+// SAFETY: must be called before `net_run`.
+int net_device_add_iface(struct net_device *dev, struct net_iface *iface) {
+    struct net_iface *entry;
+
+    for (entry = dev->ifaces; entry; entry = entry->next) {
+        if (entry->family == iface->family) {
+            errorf("already exists, dev=%s, family=%d", dev->name, entry->family);
+            return -1;
+        }   
+    }
+    iface->dev = dev;
+    iface->next = dev->ifaces;
+    dev->ifaces = iface;
+
+    return 0;
+}
+
+// Searches the logical interface associated with the network device.
+struct net_iface *net_devive_get_iface(struct net_device *dev, int family) {
+    struct net_iface *entry;
+
+    for(entry = dev->ifaces; entry; entry = entry->next) {
+        if (entry->family == family) {
+            return entry;
+        }
+    }
+
+    return NULL;
+}
+
 // Opens the network device.
 // SAFETY: `dev` must be non-null.
 static int net_device_open(struct net_device *dev) {
