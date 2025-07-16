@@ -77,7 +77,6 @@ int net_device_register(struct net_device *dev) {
     return 0;
 }
 
-
 // Registers the logical interface to the network device.
 // SAFETY: must be called before `net_run`.
 int net_device_add_iface(struct net_device *dev, struct net_iface *iface) {

@@ -34,5 +34,6 @@ struct ip_iface *ip_iface_alloc(const char *unicast, const char *netmask);
 int ip_iface_register(struct net_device *dev, struct ip_iface *iface);
 struct ip_iface *ip_iface_select(ip_addr_t addr);
 int ip_init(void);
+ssize_t ip_output(uint8_t protocol, const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t dst);
 
 #endif
