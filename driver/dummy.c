@@ -42,7 +42,7 @@ struct net_device *dummy_init(void) {
         errorf("net_device_register() failure");
         return NULL;
     }
-    intr_ruquest_irq(DUMMY_IRQ, dummy_isr, INTR_IRQ_SHARED, dev->name, dev);
+    intr_request_irq(DUMMY_IRQ, dummy_isr, INTR_IRQ_SHARED, dev->name, dev);
     debugf("initialized, dev=%s", dev->name);
     return dev;
 }

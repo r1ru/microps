@@ -55,7 +55,7 @@ mutex_unlock(mutex_t *mutex)
 #define INTR_IRQ_SHARED 0x0001
 #define INTR_IRQ_SOFTIRQ SIGUSR1
 
-int intr_ruquest_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev);
+int intr_request_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev);
 int intr_raise_irq(unsigned int irq);
 
 int intr_run(void);

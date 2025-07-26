@@ -28,7 +28,7 @@ static pthread_barrier_t barrier;
 
 // Registers a new irq handler.
 // SAFETY: must be called before `intr_run`.
-int intr_ruquest_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev) {
+int intr_request_irq(unsigned int irq, int (*handler)(unsigned int irq, void *dev), int flags, const char *name, void *dev) {
     struct irq_entry *entry;
 
     debugf("irq=%u, flags=%d, name=%s", irq, flags, name);

@@ -106,7 +106,7 @@ struct net_device * loopback_init(void) {
         errorf("net_device_register() failure");
         return NULL;
     }
-    intr_ruquest_irq(LOOPBACK_IRQ, loopback_isr, INTR_IRQ_SHARED, dev->name, dev);
+    intr_request_irq(LOOPBACK_IRQ, loopback_isr, INTR_IRQ_SHARED, dev->name, dev);
     debugf("initialized, dev=%s", dev->name);
     return dev;
 }
