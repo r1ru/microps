@@ -5,6 +5,7 @@
 #include "net.h"
 #include "ip.h"
 #include "icmp.h"
+#include "arp.h"
 
 struct net_protocol {
     struct net_protocol *next;
@@ -97,7 +98,7 @@ int net_device_add_iface(struct net_device *dev, struct net_iface *iface) {
 }
 
 // Searches the logical interface associated with the network device.
-struct net_iface *net_devive_get_iface(struct net_device *dev, int family) {
+struct net_iface *net_device_get_iface(struct net_device *dev, int family) {
     struct net_iface *entry;
 
     for(entry = dev->ifaces; entry; entry = entry->next) {
@@ -252,6 +253,10 @@ int net_init(void) {
     }
     if (icmp_init() == -1) {
         errorf("icmp_init() failure");
+        return -1;
+    }
+    if (arp_init() == -1) {
+        errorf("arp_init() failure");
         return -1;
     }
     infof("initialized");

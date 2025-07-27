@@ -126,9 +126,9 @@ int icmp_output(uint8_t type, uint8_t code, uint32_t values, const uint8_t *data
     msg_len = sizeof(*hdr) + len;
     hdr->sum = cksum16((uint16_t *)hdr, msg_len, 0);
     debugf("%s => %s, type=%s(%u), len=%zu",
-        ip_addr_ntop(src, addr1, sizeof(addr1)),
-        ip_addr_ntop(dst, addr2, sizeof(addr2)),
-        icmp_type_ntoa(hdr->type), hdr->type, msg_len);
+    ip_addr_ntop(src, addr1, sizeof(addr1)),
+    ip_addr_ntop(dst, addr2, sizeof(addr2)),
+    icmp_type_ntoa(hdr->type), hdr->type, msg_len);
     icmp_dump((uint8_t *)hdr, msg_len);
     return ip_output(IP_PROTOCOL_ICMP, (uint8_t *)hdr, msg_len, src, dst);
 }

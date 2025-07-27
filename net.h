@@ -70,7 +70,7 @@ int net_softirq_hander(void);
 struct net_device * net_device_alloc(void);
 int net_device_register(struct net_device *dev);
 int net_device_add_iface(struct net_device *dev, struct net_iface *iface);
-struct net_iface *net_devive_get_iface(struct net_device *dev, int family);
+struct net_iface *net_device_get_iface(struct net_device *dev, int family);
 int net_device_output(struct net_device *dev, uint16_t type, const uint8_t *data, size_t len, const void *dst);
 int net_input_handler(uint16_t type, const uint8_t *data, size_t len, struct net_device *dev);
 int net_run(void);

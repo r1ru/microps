@@ -224,7 +224,7 @@ static void ip_input(const uint8_t *data, size_t len, struct net_device *dev) {
         errorf("flagments are not supported");
         return;
     }
-    iface = (struct ip_iface *)net_devive_get_iface(dev, NET_IFACE_FAMILY_IP);
+    iface = (struct ip_iface *)net_device_get_iface(dev, NET_IFACE_FAMILY_IP);
     if (!iface) {
         // Ignore the packet.
         return;
