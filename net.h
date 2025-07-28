@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <sys/time.h>
 
 #ifndef IFNAMSIZ
 #define IFNAMSIZ 16
@@ -66,6 +67,9 @@ struct net_device_ops {
 int net_protocol_register(uint16_t type, void (*handler)(const uint8_t *data, size_t len, struct net_device *dev));
 
 int net_softirq_hander(void);
+
+int net_timer_register(struct timeval interval, void (*handler)(void));
+int net_timer_handler(void);
 
 struct net_device * net_device_alloc(void);
 int net_device_register(struct net_device *dev);
