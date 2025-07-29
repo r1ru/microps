@@ -32,8 +32,12 @@ struct ip_iface {
 extern const ip_addr_t IP_ADDR_ANY;
 extern const ip_addr_t IP_ADDR_BROADCAST;
 
+
 int ip_addr_pton(const char *p, ip_addr_t *n);
 char *ip_addr_ntop(ip_addr_t n, char *p, size_t size);
+int ip_route_set_default_gateway(struct ip_iface *iface, const char *gateway);
+struct ip_iface * ip_route_get_iface(ip_addr_t dst);
+
 struct ip_iface *ip_iface_alloc(const char *unicast, const char *netmask);
 int ip_iface_register(struct net_device *dev, struct ip_iface *iface);
 int ip_protocol_register(uint8_t type, void (*handler)(const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t dst, struct ip_iface *iface));
