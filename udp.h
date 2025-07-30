@@ -8,5 +8,8 @@
 
 ssize_t udp_output(struct ip_endpoint *src, struct ip_endpoint *dst, const uint8_t *buf, size_t len);
 int udp_init(void);
+int udp_open(void);
+int udp_bind(int index, struct ip_endpoint *local);
+int udp_close(int id);
 
 #endif
