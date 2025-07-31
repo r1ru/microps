@@ -71,6 +71,10 @@ int net_softirq_hander(void);
 int net_timer_register(struct timeval interval, void (*handler)(void));
 int net_timer_handler(void);
 
+int net_event_subscribe(void (*handler)(void *arg), void *arg);
+int net_event_handler(void);
+void net_raise_event(void);
+
 struct net_device * net_device_alloc(void);
 int net_device_register(struct net_device *dev);
 int net_device_add_iface(struct net_device *dev, struct net_iface *iface);
