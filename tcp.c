@@ -127,6 +127,8 @@ static int tcp_retransmit_queue_add(struct tcp_pcb *pcb, uint32_t seq, uint8_t f
     return 0;
 }
 
+static char * tcp_flg_ntoa(uint8_t flg);
+
 static void tcp_retransmit_queue_cleanup(struct tcp_pcb *pcb) {
     struct tcp_queue_entry *entry;
 
@@ -144,6 +146,8 @@ static void tcp_retransmit_queue_cleanup(struct tcp_pcb *pcb) {
     }
     return;
 }
+
+static ssize_t tcp_output_segment(uint32_t seq, uint32_t ack, uint8_t flg, uint16_t wnd, uint8_t *data, size_t len, struct ip_endpoint *local, struct ip_endpoint *foreign);
 
 static void tcp_retransmit_queue_emit(void *arg, void *data) {
     struct tcp_pcb *pcb;
